@@ -1,0 +1,11 @@
+.btn-primary {
+    background-color:#351c75;
+}
+
+.btn-primary:hover {
+    background-color:#b583cc;
+}
+
+.navbar-light .navbar-nav .nav-link.active {
+    color:#b583cc;
+}
