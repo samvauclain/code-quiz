@@ -1,9 +1,24 @@
-// FIRST TO-DO: setup timer
+// Setup timer
 var timerEl = document.getElementById('timer');
-var startButton = document.getElementById('startButton');
-timerEl.textContent = "Time: " + 0;
+timerEl.textContent = 'Time: ' + 0;
 
-// Timer that counts down from 75
+// Select HTML eleents and store as variables for populateQuizObjects();
+var quizContainer = document.getElementById('startButton');
+var startButton = document.getElementById('startButton');
+var quizButtonGroup = document.getElementById('quizButtonGroup');
+var quizParagraph = document.getElementById('quizParagraph');
+var quizHeader = document.getElementById('quizHeader');
+
+
+// Question and Answer objects (start with 1 in a simple form)
+var quizObject1 = {
+    question : 'Question 1 __________',
+    answer : ['Answer 1', 'Answer 2', 'Answer 3', 'Answer 4'],
+    result : [false, true, false, false],
+    message : ['Wrong!', 'Correct!']
+}
+
+// Timer that will count down from 75, currently set lower for testing
 function timer() {
     var timeRemaining = 3;
   
@@ -12,36 +27,55 @@ function timer() {
   
       // if timer has 1 or more seconds left, subtract one every second and display new value
       if (timeRemaining >= 0) {
-        timerEl.textContent = "Time: " + timeRemaining;
+        timerEl.textContent = 'Time: ' + timeRemaining;
         timeRemaining--;
         console.log(timeRemaining);
       } 
       // otherwise, reset time interval, 
       else {
         clearInterval(timeInterval);
-        timerEl.textContent = "Time: " + 0;
+        timerEl.textContent = 'Time: ' + 0;
         timeExpired();
       }
     }, 1000);
   }
+
+  function populateQuizObjects() {
+    //remove start button and quiz paragraph for "clean slate"
+    startButton.remove();
+    quizParagraph.remove();
+
+    // Replace header text with question 1 for now
+    quizHeader.textContent = quizObject1.question;
+    // removing class to put text back to left isn't working
+    document.getElementById('quizHeader').classList.remove('text-center');
+
+    // Put question buttons into quizButtonGroup div (where start button was)
+    // turn this into a for loop and get each from array
+    var Question1 = '<button type="button" class="d-block mt-2 btn btn-primary">' + quizObject1.answer[0] + '</button>';
+    var Question2 = '<button type="button" class="d-block mt-2 btn btn-primary">' + quizObject1.answer[1] + '</button>';
+    var Question3 = '<button type="button" class="d-block mt-2 btn btn-primary">' + quizObject1.answer[2] + '</button>';
+    var Question4 = '<button type="button" class="d-block mt-2 btn btn-primary">' + quizObject1.answer[3] + '</button>';
+    quizButtonGroup.innerHTML = Question1 + Question2 + Question3 + Question4;
+  } 
   
+  // Run the timer function, this needs to be hooked to the "Start Quiz" button.
+  document.getElementById('startButton').onclick = function(){
+    timer();
+    populateQuizObjects();
+  }
+
+
   // Setup what happens when time runs out.
   function timeExpired() {
     alert('Time Expired.');
   }
 
-  // Run the timer function, this needs to be hooked to the "Start Quiz" button.
-  document.getElementById('startButton').onclick = function(){
-    timer();
-  }
-
 
 // SECOND TO-DO: I'll try setting up the quiz questions and related elements as objects, make them flexible so they could be used for everything after the "menu". 
 // Arrays within the objects for questions and answers? 
-//Populate answer buttons with their text and true / false logic.  
+// Loop through & populate answer buttons with their text and true / false logic.  
 
-
-// alert("script is linked!");
 
 // AS A coding boot camp student
 // I WANT to take a timed quiz on JavaScript fundamentals that stores high scores
