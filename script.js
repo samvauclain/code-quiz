@@ -29,7 +29,7 @@ function timer() {
       if (timeRemaining >= 0) {
         timerEl.textContent = 'Time: ' + timeRemaining;
         timeRemaining--;
-        console.log(timeRemaining);
+        // console.log(timeRemaining);
       } 
       // otherwise, reset time interval, 
       else {
@@ -48,28 +48,35 @@ function timer() {
     // Replace header text with question 1 for now
     quizHeader.textContent = quizObject1.question;
     // removing class to put text back to left isn't working
-    document.getElementById('quizHeader').classList.remove('text-center');
+    quizContainer.classList.remove('text-center');
 
-    // Put question buttons into quizButtonGroup div (where start button was)
-    // turn this into a for loop and get each from array
-    var Question1 = '<button type="button" class="d-block mt-2 btn btn-primary">' + quizObject1.answer[0] + '</button>';
-    var Question2 = '<button type="button" class="d-block mt-2 btn btn-primary">' + quizObject1.answer[1] + '</button>';
-    var Question3 = '<button type="button" class="d-block mt-2 btn btn-primary">' + quizObject1.answer[2] + '</button>';
-    var Question4 = '<button type="button" class="d-block mt-2 btn btn-primary">' + quizObject1.answer[3] + '</button>';
-    quizButtonGroup.innerHTML = Question1 + Question2 + Question3 + Question4;
-  } 
+    // Loop through and put question buttons into quizButtonGroup div (where start button was)
+    for (var i = 0; i < quizObject1.answer.length; i++) {
+        quizButtonGroup.innerHTML += '<button type="button" class="d-block mt-2 btn btn-primary">' + quizObject1.answer[i] + '</button>';
+        console.log(quizObject1.result[i]);
+    }
+
+    // need this to be part of the for loop too
+    // if (quizObject1.answer[i] === true) {
+    //     alert("Correct! We need to add points.");
+    // }
+    // else {
+    //     alert("False, we need to subtract time");
+    // }
+
+  };
   
   // Run the timer function, this needs to be hooked to the "Start Quiz" button.
   document.getElementById('startButton').onclick = function(){
     timer();
     populateQuizObjects();
-  }
+  };
 
 
   // Setup what happens when time runs out.
   function timeExpired() {
     alert('Time Expired.');
-  }
+  };
 
 
 // SECOND TO-DO: I'll try setting up the quiz questions and related elements as objects, make them flexible so they could be used for everything after the "menu". 
