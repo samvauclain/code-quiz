@@ -1,5 +1,6 @@
 // FIRST TO-DO: setup timer
 var timerEl = document.getElementById('timer');
+var startButton = document.getElementById('startButton');
 timerEl.textContent = "Time: " + 0;
 
 // Timer that counts down from 75
@@ -30,7 +31,9 @@ function timer() {
   }
 
   // Run the timer function, this needs to be hooked to the "Start Quiz" button.
-  timer();
+  document.getElementById('startButton').onclick = function(){
+    timer();
+  }
 
 
 // SECOND TO-DO: I'll try setting up the quiz questions and related elements as objects, make them flexible so they could be used for everything after the "menu". 
