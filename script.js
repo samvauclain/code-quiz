@@ -13,11 +13,18 @@ var quizHeader = document.getElementById('quizHeader');
 // Question and Answer objects (start with 1 in a simple form)
 // dynamically generate the answer numbers too
 var quizObject1 = {
-    question : 'A very useful tool used during development and debugging for printing content to the debugger is:',
-    answer : ['1. JavaScript', '2. terminal/bash', '3. for loops', '4. console.log'],
-    result : [false, false, false, true],
-    message : ['Wrong!', 'Correct!']
+  question : 'A very useful tool used during development and debugging for printing content to the debugger is:',
+  answer : ['1. JavaScript', '2. terminal/bash', '3. for loops', '4. console.log'],
+  result : [false, false, false, true],
+  message : ['Wrong!', 'Correct!']
 }
+
+// var quizObject2 = {
+//   question : 'Arrays in JavaScript can be used to store __________',
+//   answer : ['1. numbers and strings', '2. other arrarys', '3. booleans', '4. all of the above'],
+//   result : [false, false, false, true],
+//   message : ['Wrong!', 'Correct!']
+// }
 
 // Timer that will count down from 75, currently set lower for testing
 function timer() {
@@ -61,7 +68,6 @@ function timer() {
 
   function buttonHandler(arg) {
     console.log(arg);
-
       if (arg) {
         alert("Correct!");
       }
