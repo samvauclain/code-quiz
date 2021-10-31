@@ -17,7 +17,6 @@ var userIdCounter = 0;
 var userScoresEl = '';
 var userHighScore = [];
 var highScores = [];
-var newScore = ''
 
 //  __________
 // Question and Answer objects (start with 1 in a simple form)
@@ -189,11 +188,9 @@ function timer() {
       }
 
       answersGiven++;
-
       setTimeout(function(){
         populateQuizObjects(); 
       }, 1000);
-
       return(answersGiven);
   }
 
@@ -205,38 +202,9 @@ function timer() {
     }, 500);
   };
 
-  function loadScores() {
-    newScore = `${quizTaker} - ${finalUserScore}`;
-    // localStorage.setItem("userHighScore", JSON.stringify([]));
-    quizHeader.textContent = "High scores";
-
-    var currentScores = JSON.parse(localStorage.getItem('scores'));
-    currentScores.push(newScore);
-
-    localStorage.setItem('scores', JSON.stringify(currentScores));
-
-    if(localStorage.getItem('scores') === null) {
-      localStorage.setItem('scores', '[]');
-    }
-    else {
-      for (var i = 0; i < currentScores.length; i++) {
-        quizButtonGroup.innerHTML += `<p class="alert alert-secondary userScore" role="alert">${currentScores[i]}</p>`;
-      }  
-    }
-    
-  };
-
   function highScorePage() {
-    loadScores();
+    newScore = `${quizTaker} - ${finalUserScore}`;
 
-    // <button type="button" class="d-inline mt-2 btn btn-primary">Go back</button>
-    // <button type="button" class="d-inline mt-2 btn btn-primary">Clear High Scores</button>
-
-    saveScores();
-  };
-
-  function saveScores() {
-    
     if(localStorage.getItem('scores') === null) {
       localStorage.setItem('scores', '[]') ;
     }
@@ -245,7 +213,32 @@ function timer() {
     currentScores.push(newScore);
 
     localStorage.setItem('scores', JSON.stringify(currentScores));
+
+    // localStorage.setItem("userHighScore", JSON.stringify([]));
+    quizHeader.textContent = "High scores";
+
+    for (let i = 0; i < currentScores.length; i++) {
+      quizButtonGroup.innerHTML += `<p class="alert alert-secondary userScore" role="alert">${currentScores[i]}</p>`;
+    }
+    
+    // <button type="button" class="d-inline mt-2 btn btn-primary">Go back</button>
+    // <button type="button" class="d-inline mt-2 btn btn-primary">Clear High Scores</button>
+    
+    // saveScores();
   };
+
+  // function saveScores() {
+  //   console.log(newScore);
+    
+  //   if(localStorage.getItem('scores') === null) {
+  //     localStorage.setItem('scores', '[]') ;
+  //   }
+
+  //   var currentScores = JSON.parse(localStorage.getItem('scores'));
+  //   currentScores.push(newScore);
+
+  //   localStorage.setItem('scores', JSON.stringify(currentScores));
+  // };
 
   // Run the timer function, this needs to be hooked to the "Start Quiz" button.
   document.getElementById('startButton').addEventListener("click", function(e){
@@ -259,6 +252,11 @@ function timer() {
     alert('Time Expired.');
   }
  
+  // function logQuizTaker() {
+  //   console.log(quizTaker);
+  //   // logQuizTaker(quizTaker);
+  //   return quizTaker;
+  // };
 
 // SECOND TO-DO: I'll try setting up the quiz questions and related elements as objects, make them flexible so they could be used for everything after the "menu". 
 // Arrays within the objects for questions and answers? 
