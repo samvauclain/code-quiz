@@ -9,6 +9,9 @@ var quizButtonGroup = document.getElementById('quizButtonGroup');
 var quizParagraph = document.getElementById('quizParagraph');
 var quizHeader = document.getElementById('quizHeader');
 var answersGiven = 0;
+var timeRemaining = 0;
+var userScore = 0;
+var quizTaker = '';
 
 //  __________
 // Question and Answer objects (start with 1 in a simple form)
@@ -46,23 +49,28 @@ var quizObject5 = {
 
 // Timer that will count down from 75, currently set lower for testing
 function timer() {
-    var timeRemaining = 10;
-  
+    timeRemaining = 75;
     // every second (1000 milliseconds, second argument of setInterval & set at end of anonymous function)
     var timeInterval = setInterval(function () {
   
       // if timer has 1 or more seconds left, subtract one every second and display new value
-      if (timeRemaining >= 0) {
+      if (timeRemaining >= 0 && answersGiven < 5) {
         timerEl.textContent = 'Time: ' + timeRemaining;
         timeRemaining--;
         // console.log(timeRemaining);
       } 
+
+      else if (timeRemaining >= 0 && answersGiven >= 5) {
+        clearInterval(timeInterval);
+      }
+
       // otherwise, reset time interval, 
       else {
         clearInterval(timeInterval);
         timerEl.textContent = 'Time: ' + 0;
         timeExpired();
       }
+
     }, 1000);
   }
 
@@ -85,10 +93,11 @@ function timer() {
       populate4();
     }
     else if (answersGiven===4) {
-      populate4();
+      populate5();
     }
     else {
-      alert('quiz done');
+      // alert('quiz done');
+      allDone();
     }
 
   };
@@ -105,6 +114,7 @@ function timer() {
       quizButtonGroup.innerHTML += `<button type="button" class="d-block mt-2 btn btn-primary" onclick="buttonHandler(${quizObject1.result[i]})">` + quizObject1.answer[i] + '</button>';
       console.log(quizObject1.result[i]);
     }
+
   };
 
   function populate2() {
@@ -155,18 +165,36 @@ function timer() {
     }
   };
 
+  function allDone() {
+    // Replace header text with question 1 for now
+    quizHeader.textContent = "All done!";
+    quizButtonGroup.innerHTML = 
+    `<h4 class="py-1">Your final score is ${userScore + timeRemaining + 1}</h4></br>
+     <h4 class="py-1">Enter initials: <input type="text" name="initials" class="border align-middle"> <input type="submit" value="Submit" name="submit" class="btn btn-primary align-top"> </h4>`;
+    timerEl.textContent = timeRemaining + 1;
+  };
+
   function buttonHandler(arg) {
     console.log(arg);
       if (arg) {
-        alert("Correct!");
+        quizButtonGroup.innerHTML += "<hr><h3>Correct!</h3>";
+        userScore = userScore + 5;
       }
       else {
-        alert("False!");
+        quizButtonGroup.innerHTML += "<hr><h3>Wrong!</h3>";
+        timeRemaining = timeRemaining - 10;
       }
+
       answersGiven++;
-      populateQuizObjects();
+      setTimeout(function(){
+        populateQuizObjects(); 
+      }, 1000);
       return(answersGiven);
   }
+
+  // var submitHandler = function (event) {
+  //   event.preventDefault();
+  // };
 
   // Run the timer function, this needs to be hooked to the "Start Quiz" button.
   document.getElementById('startButton').addEventListener("click", function(e){
@@ -180,7 +208,12 @@ function timer() {
     alert('Time Expired.');
   }
  
-
+  function logQuizTaker() {
+    quizTaker = document.querySelector("input[name='initials']").value;
+    console.log(quizTaker);
+    // logQuizTaker(quizTaker);
+    return quizTaker;
+  };
 
 // SECOND TO-DO: I'll try setting up the quiz questions and related elements as objects, make them flexible so they could be used for everything after the "menu". 
 // Arrays within the objects for questions and answers? 
@@ -193,17 +226,16 @@ function timer() {
 
 // GIVEN I am taking a code quiz
 // WHEN I click the start button
-
 // THEN a timer starts and I am presented with a question
+
 // WHEN I answer a question
-
 // THEN I am presented with another question
+
 // WHEN I answer a question incorrectly
-
 // THEN time is subtracted from the clock
+
 // WHEN all questions are answered or the timer reaches 0
-
 // THEN the game is over
-// WHEN the game is over
 
+// WHEN the game is over
 // THEN I can save my initials and score
