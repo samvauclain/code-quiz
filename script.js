@@ -11,6 +11,7 @@ var quizHeader = document.getElementById('quizHeader');
 var answersGiven = 0;
 var timeRemaining = 0;
 var userScore = 0;
+var finalUserScore = 0;
 var quizTaker = '';
 
 //  __________
@@ -167,10 +168,12 @@ function timer() {
 
   function allDone() {
     // Replace header text with question 1 for now
+    finalUserScore = userScore + timeRemaining + 1
     quizHeader.textContent = "All done!";
     quizButtonGroup.innerHTML = 
-    `<h4 class="py-1">Your final score is ${userScore + timeRemaining + 1}</h4></br>
-     <h4 class="py-1">Enter initials: <input type="text" name="initials" class="border align-middle"> <input type="submit" value="Submit" name="submit" class="btn btn-primary align-top"> </h4>`;
+    `<h4 class="py-1">Your final score is ${finalUserScore}</h4></br>
+     <h4 class="py-1">Enter initials: <input type="text" id="initials" class="border align-middle d-inline"> <button type="button" class="d-inline mt-2 btn btn-primary align-baseline" onclick="submitHandler()"'>Submit</button></h4>`;
+
     timerEl.textContent = timeRemaining + 1;
   };
 
@@ -192,9 +195,22 @@ function timer() {
       return(answersGiven);
   }
 
-  // var submitHandler = function (event) {
-  //   event.preventDefault();
-  // };
+  function submitHandler() {
+    // event.preventDefault();
+    quizTaker = document.getElementById('initials').value;
+    alert("thanks for playing " + quizTaker + "!");
+    setTimeout(function(){
+      highScorePage();
+    }, 500);
+  };
+
+  function highScorePage() {
+    quizHeader.textContent = "High scores";
+    quizButtonGroup.innerHTML = `<p class="alert alert-secondary" role="alert">${quizTaker} - ${finalUserScore}</p>
+    <button type="button" class="d-inline mt-2 btn btn-primary">Go back</button>
+    <button type="button" class="d-inline mt-2 btn btn-primary">Clear High Scores</button>
+    `;
+  };
 
   // Run the timer function, this needs to be hooked to the "Start Quiz" button.
   document.getElementById('startButton').addEventListener("click", function(e){
@@ -208,12 +224,11 @@ function timer() {
     alert('Time Expired.');
   }
  
-  function logQuizTaker() {
-    quizTaker = document.querySelector("input[name='initials']").value;
-    console.log(quizTaker);
-    // logQuizTaker(quizTaker);
-    return quizTaker;
-  };
+  // function logQuizTaker() {
+  //   console.log(quizTaker);
+  //   // logQuizTaker(quizTaker);
+  //   return quizTaker;
+  // };
 
 // SECOND TO-DO: I'll try setting up the quiz questions and related elements as objects, make them flexible so they could be used for everything after the "menu". 
 // Arrays within the objects for questions and answers? 
