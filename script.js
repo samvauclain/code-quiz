@@ -13,6 +13,10 @@ var timeRemaining = 0;
 var userScore = 0;
 var finalUserScore = 0;
 var quizTaker = '';
+var userIdCounter = 0;
+var userScoresEl = '';
+var userHighScore = [];
+var highScores = [];
 
 //  __________
 // Question and Answer objects (start with 1 in a simple form)
@@ -26,7 +30,7 @@ var quizObject1 = {
 
 var quizObject2 = {
   question : 'The condition in an if / else statement is enclosed with __________',
-  answer : ['1. quotes', '2. curly brackets', '3. paranthesis', '4. square brackets'],
+  answer : ['1. quotes', '2. curly brackets', '3. parentheses', '4. square brackets'],
   result : [false, false, true, false]
 }
 
@@ -38,7 +42,7 @@ var quizObject3 = {
 
 var quizObject4 = {
   question : 'String values must be enclosed within __________ when being assigned to variables.',
-  answer : ['1. commas', '2. curly brackets', '3. quotes', '4. parathensis'],
+  answer : ['1. commas', '2. curly brackets', '3. quotes', '4. parentheses'],
   result : [false, false, true, false]
 }
 
@@ -113,7 +117,7 @@ function timer() {
 
     for (var i = 0; i < quizObject1.answer.length; i++) {
       quizButtonGroup.innerHTML += `<button type="button" class="d-block mt-2 btn btn-primary" onclick="buttonHandler(${quizObject1.result[i]})">` + quizObject1.answer[i] + '</button>';
-      console.log(quizObject1.result[i]);
+      // console.log(quizObject1.result[i]);
     }
 
   };
@@ -126,7 +130,6 @@ function timer() {
 
     for (var i = 0; i < quizObject2.answer.length; i++) {
       quizButtonGroup.innerHTML += `<button type="button" class="d-block mt-2 btn btn-primary" onclick="buttonHandler(${quizObject2.result[i]})">` + quizObject2.answer[i] + '</button>';
-      console.log(quizObject2.result[i]);
     }
   };
 
@@ -138,7 +141,6 @@ function timer() {
 
     for (var i = 0; i < quizObject3.answer.length; i++) {
       quizButtonGroup.innerHTML += `<button type="button" class="d-block mt-2 btn btn-primary" onclick="buttonHandler(${quizObject3.result[i]})">` + quizObject3.answer[i] + '</button>';
-      console.log(quizObject3.result[i]);
     }
   };
 
@@ -150,7 +152,6 @@ function timer() {
 
     for (var i = 0; i < quizObject4.answer.length; i++) {
       quizButtonGroup.innerHTML += `<button type="button" class="d-block mt-2 btn btn-primary" onclick="buttonHandler(${quizObject4.result[i]})">` + quizObject4.answer[i] + '</button>';
-      console.log(quizObject4.result[i]);
     }
   };
 
@@ -162,7 +163,6 @@ function timer() {
 
     for (var i = 0; i < quizObject5.answer.length; i++) {
       quizButtonGroup.innerHTML += `<button type="button" class="d-block mt-2 btn btn-primary" onclick="buttonHandler(${quizObject5.result[i]})">` + quizObject5.answer[i] + '</button>';
-      console.log(quizObject5.result[i]);
     }
   };
 
@@ -173,18 +173,17 @@ function timer() {
     quizButtonGroup.innerHTML = 
     `<h4 class="py-1">Your final score is ${finalUserScore}</h4></br>
      <h4 class="py-1">Enter initials: <input type="text" id="initials" class="border align-middle d-inline"> <button type="button" class="d-inline mt-2 btn btn-primary align-baseline" onclick="submitHandler()"'>Submit</button></h4>`;
-
-    timerEl.textContent = timeRemaining + 1;
+     timerEl.textContent = timeRemaining + 1;
   };
 
   function buttonHandler(arg) {
     console.log(arg);
       if (arg) {
-        quizButtonGroup.innerHTML += "<hr><h3>Correct!</h3>";
+        quizButtonGroup.innerHTML += "<hr><h3>Correct! + 5 points</h3>";
         userScore = userScore + 5;
       }
       else {
-        quizButtonGroup.innerHTML += "<hr><h3>Wrong!</h3>";
+        quizButtonGroup.innerHTML += "<hr><h3>Wrong! - 10 seconds</h3>";
         timeRemaining = timeRemaining - 10;
       }
 
@@ -198,18 +197,33 @@ function timer() {
   function submitHandler() {
     // event.preventDefault();
     quizTaker = document.getElementById('initials').value;
-    alert("thanks for playing " + quizTaker + "!");
     setTimeout(function(){
       highScorePage();
     }, 500);
   };
 
   function highScorePage() {
+    newScore = `${quizTaker} - ${finalUserScore}`;
+    // localStorage.setItem("userHighScore", JSON.stringify([]));
     quizHeader.textContent = "High scores";
-    quizButtonGroup.innerHTML = `<p class="alert alert-secondary" role="alert">${quizTaker} - ${finalUserScore}</p>
+    quizButtonGroup.innerHTML = `<p class="alert alert-secondary userScore" role="alert">${newScore}</p>
     <button type="button" class="d-inline mt-2 btn btn-primary">Go back</button>
     <button type="button" class="d-inline mt-2 btn btn-primary">Clear High Scores</button>
     `;
+    saveScores();
+  };
+
+  function saveScores() {
+    console.log(newScore);
+    
+    if(localStorage.getItem('scores') === null) {
+      localStorage.setItem('scores', '[]') ;
+    }
+
+    var currentScores = JSON.parse(localStorage.getItem('scores'));
+    currentScores.push(newScore);
+
+    localStorage.setItem('scores', JSON.stringify(currentScores));
   };
 
   // Run the timer function, this needs to be hooked to the "Start Quiz" button.
