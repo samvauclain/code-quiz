@@ -197,12 +197,19 @@ function timer() {
   function submitHandler() {
     // event.preventDefault();
     quizTaker = document.getElementById('initials').value;
-    setTimeout(function(){
-      highScorePage();
-    }, 500);
+
+    if (quizTaker) {
+      setTimeout(function(){
+        highScorePage();
+      }, 500);
+    }
+    else {
+      alert("Please enter your initials");
+    }
   };
 
   function highScorePage() {
+    quizButtonGroup.innerHTML = '';
     newScore = `${quizTaker} - ${finalUserScore}`;
 
     if(localStorage.getItem('scores') === null) {
@@ -213,32 +220,25 @@ function timer() {
     currentScores.push(newScore);
 
     localStorage.setItem('scores', JSON.stringify(currentScores));
-
-    // localStorage.setItem("userHighScore", JSON.stringify([]));
     quizHeader.textContent = "High scores";
 
     for (let i = 0; i < currentScores.length; i++) {
       quizButtonGroup.innerHTML += `<p class="alert alert-secondary userScore" role="alert">${currentScores[i]}</p>`;
     }
     
-    // <button type="button" class="d-inline mt-2 btn btn-primary">Go back</button>
-    // <button type="button" class="d-inline mt-2 btn btn-primary">Clear High Scores</button>
-    
-    // saveScores();
+    quizButtonGroup.innerHTML +=
+    `<button type="button" class="d-inline mt-2 btn btn-primary" onclick="goBack()">Go back</button>
+    <button type="button" class="d-inline mt-2 btn btn-primary" onclick="clearStorage()">Clear High Scores</button>`;
+
   };
 
-  // function saveScores() {
-  //   console.log(newScore);
-    
-  //   if(localStorage.getItem('scores') === null) {
-  //     localStorage.setItem('scores', '[]') ;
-  //   }
+  function goBack() {
+    location.reload();
+  }
 
-  //   var currentScores = JSON.parse(localStorage.getItem('scores'));
-  //   currentScores.push(newScore);
-
-  //   localStorage.setItem('scores', JSON.stringify(currentScores));
-  // };
+  function clearStorage() {
+    alert("clicked!");
+  }
 
   // Run the timer function, this needs to be hooked to the "Start Quiz" button.
   document.getElementById('startButton').addEventListener("click", function(e){
