@@ -110,6 +110,7 @@ function timer() {
   index++; 
 }
 
+  // check answers and update score / time
   function buttonHandler(correct) {
     // console.log(correct);
       if (correct) {
@@ -121,9 +122,9 @@ function timer() {
         timeRemaining = timeRemaining - 10;
       }
 
-      document.getElementsByClassName('questionBtn').disabled = true;
       answersGiven++;
       
+      // brief delay to show correct or wrong message
       setTimeout(function(){
         populateQuizObjects(); 
       }, 500);
@@ -134,6 +135,9 @@ function timer() {
   function submitHandler() {
     // event.preventDefault();
     quizTaker = document.getElementById('initials').value;
+
+    // couldn't figure out how to disable button during timeout below
+    document.getElementsByClassName('questionBtn').disabled = true;
 
     if (quizTaker) {
       setTimeout(function(){
@@ -146,7 +150,7 @@ function timer() {
   }
 
   function quizDone() {
-    // Replace header text with question 1 for now
+    // Replace header text with all done, generate input for user to submit their initials
     finalUserScore = userScore + timeRemaining + 1;
     quizHeader.textContent = "All done!";
     quizButtonGroup.innerHTML = 
@@ -160,6 +164,7 @@ function timer() {
     viewHighScores();
   }
 
+  // adds user and score to the high score list
   function viewHighScores() {
     timerEl.textContent = '';
     quizButtonGroup.innerHTML = '';
@@ -167,12 +172,14 @@ function timer() {
     quizContainer.classList.remove('text-center');
     quizParagraph.remove();
 
+    // creating local storage
     if(localStorage.getItem('scores') === null) {
       localStorage.setItem('scores', '[]') ;
     }
 
     var currentScores = JSON.parse(localStorage.getItem('scores'));
     
+    // if there is a new score, add it to the high score list
     if (newScore) {
       currentScores.push(newScore);
     }
@@ -180,19 +187,23 @@ function timer() {
     localStorage.setItem('scores', JSON.stringify(currentScores));
     quizHeader.textContent = "High scores";
 
+    // loop through scores to build the list
     for (var i = 0; i < currentScores.length; i++) {
       quizButtonGroup.innerHTML += `<p class="alert alert-secondary userScore" role="alert">${currentScores[i]}</p>`;
     }
     
+    // generate back and clear buttons
     quizButtonGroup.innerHTML +=
     `<button type="button" class="d-inline mt-2 btn btn-primary" onclick="goBack()">Go back</button>
     <button type="button" class="d-inline mt-2 btn btn-primary" onclick="clearStorage()">Clear High Scores</button>`;
   }
 
+  // takes you back to the "home" page
   function goBack() {
     location.reload();
   }
 
+  // clears out local storage
   function clearStorage() {
     alert("High scores deleted.");
     localStorage.clear();
