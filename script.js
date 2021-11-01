@@ -1,13 +1,16 @@
-// Setup timer
+// setup timer
 var timerEl = document.getElementById('timer');
 timerEl.textContent = 'Time: ' + 0;
 
-// Select HTML eleents and store as variables for populateQuizObjects();
+// select HTML elements and store as variables for populateQuizObjects();
 var quizContainer = document.getElementById('quizContainer');
 var startButton = document.getElementById('startButton');
 var quizButtonGroup = document.getElementById('quizButtonGroup');
 var quizParagraph = document.getElementById('quizParagraph');
 var quizHeader = document.getElementById('quizHeader');
+var viewHighScoresLink = document.getElementById('viewHighScoresLink');
+
+// global variables 
 var answersGiven = 0;
 var timeRemaining = 0;
 var userScore = 0;
@@ -16,11 +19,11 @@ var quizTaker = '';
 var newScore = '';
 var index = 0;
 
-// Array of question objects
+// array of question objects
 var quizObjectArray = [{
-  question : 'Commonly used data types DO NOT include __________',
-  answer : ['1. strings', '2. booleans', '3. alerts', '4. numbers'],
-  result : [false, false, true, false]
+    question : 'Commonly used data types DO NOT include __________',
+    answer : ['1. strings', '2. booleans', '3. alerts', '4. numbers'],
+    result : [false, false, true, false]
   },
   {
     question : 'The condition in an if / else statement is enclosed with __________',
@@ -43,7 +46,14 @@ var quizObjectArray = [{
     result : [false, false, false, true]
   }];
 
-// Timer that will count down from 75, currently set lower for testing
+// Run the timer function when start button is clicked.
+document.getElementById('startButton').addEventListener("click", function(e){
+    console.log("start button:", e.target);
+    timer();
+    populateQuizObjects();
+  });
+
+// timer that will count down from 75, currently set lower for testing
 function timer() {
     timeRemaining = 75;
     // every second (1000 milliseconds, second argument of setInterval & set at end of anonymous function)
@@ -73,22 +83,26 @@ function timer() {
   function populateQuizObjects() {
       quizContainer.classList.remove('text-center');
 
+      // if every question is answered, move on to quizDone function
       if (answersGiven === quizObjectArray.length) {
         quizDone();
         return;
       }
 
+      // otherwise, run the populate function to get each question and answer set
       populate();
   }
 
   function populate() {
-    // Replace header text with question 
+    // replace header text with question and clear group area
     quizHeader.textContent = quizObjectArray[index].question;
     quizButtonGroup.innerHTML = '';
-    //remove start button and quiz paragraph for "clean slate"
+
+    // remove start button and quiz paragraph for "clean slate"
     startButton.remove();
     quizParagraph.remove();
 
+  // loop through and build each question answer set
   for (var i = 0; i < quizObjectArray[index].answer.length; i++) {
     quizButtonGroup.innerHTML += `<button type="button" class="d-block mt-2 btn btn-primary questionBtn" onclick="buttonHandler(${quizObjectArray[index].result[i]})">` + quizObjectArray[index].answer[i] + '</button>';
     // console.log(quizObjectArray.result[i]);
@@ -96,19 +110,9 @@ function timer() {
   index++; 
 }
 
-  function quizDone() {
-    // Replace header text with question 1 for now
-    finalUserScore = userScore + timeRemaining + 1;
-    quizHeader.textContent = "All done!";
-    quizButtonGroup.innerHTML = 
-    `<h4 class="py-1">Your final score is ${finalUserScore}</h4></br>
-     <h4 class="py-1">Enter initials: <input type="text" id="initials" class="border align-middle d-inline"> <button type="button" class="d-inline mt-2 btn btn-primary align-baseline" onclick="submitHandler()"'>Submit</button></h4>`;
-     timerEl.textContent = timeRemaining + 1;
-  }
-
-  function buttonHandler(arg) {
-    console.log(arg);
-      if (arg) {
+  function buttonHandler(correct) {
+    // console.log(correct);
+      if (correct) {
         quizButtonGroup.innerHTML += "<hr><h3>Correct! + 5 points</h3>";
         userScore = userScore + 5;
       }
@@ -118,12 +122,11 @@ function timer() {
       }
 
       document.getElementsByClassName('questionBtn').disabled = true;
-
       answersGiven++;
       
       setTimeout(function(){
         populateQuizObjects(); 
-      }, 1000);
+      }, 275);
 
       return(answersGiven);
   }
@@ -142,13 +145,25 @@ function timer() {
     }
   }
 
+  function quizDone() {
+    // Replace header text with question 1 for now
+    finalUserScore = userScore + timeRemaining + 1;
+    quizHeader.textContent = "All done!";
+    quizButtonGroup.innerHTML = 
+    `<h4 class="py-1">Your final score is ${finalUserScore}</h4></br>
+     <h4 class="py-1">Enter initials: <input type="text" id="initials" class="border align-middle d-inline"> <button type="button" class="d-inline mt-2 btn btn-primary align-baseline" onclick="submitHandler()"'>Submit</button></h4>`;
+     timerEl.textContent = '';
+  }
+
   function highScorePage() {
     newScore = `${quizTaker} - ${finalUserScore}`;
     viewHighScores();
   }
 
   function viewHighScores() {
+    timerEl.textContent = '';
     quizButtonGroup.innerHTML = '';
+    viewHighScoresLink.remove();
     quizContainer.classList.remove('text-center');
     quizParagraph.remove();
 
@@ -183,13 +198,6 @@ function timer() {
     localStorage.clear();
     location.reload();
   }
-
-  // Run the timer function, this needs to be hooked to the "Start Quiz" button.
-  document.getElementById('startButton').addEventListener("click", function(e){
-    console.log("start button:", e.target);
-    timer();
-    populateQuizObjects();
-  });
 
   // Setup what happens when time runs out.
   function timeExpired() {
