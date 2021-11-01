@@ -13,17 +13,10 @@ var timeRemaining = 0;
 var userScore = 0;
 var finalUserScore = 0;
 var quizTaker = '';
-var userIdCounter = 0;
-var userScoresEl = '';
-var userHighScore = [];
-var highScores = [];
 var newScore = '';
 var index = 0;
 
-//  __________
-// Question and Answer objects (start with 1 in a simple form)
-// dynamically generate the answer numbers too
-
+// Array of question objects
 var quizObjectArray = [{
   question : 'Commonly used data types DO NOT include __________',
   answer : ['1. strings', '2. booleans', '3. alerts', '4. numbers'],
@@ -48,7 +41,7 @@ var quizObjectArray = [{
     question : 'A very useful tool used during development and debugging for printing content to the debugger is:',
     answer : ['1. JavaScript', '2. terminal/bash', '3. for loops', '4. console.log'],
     result : [false, false, false, true]
-  }]
+  }];
 
 // Timer that will count down from 75, currently set lower for testing
 function timer() {
@@ -57,17 +50,18 @@ function timer() {
     var timeInterval = setInterval(function () {
   
       // if timer has 1 or more seconds left, subtract one every second and display new value
-      if (timeRemaining >= 0 && answersGiven < 5) {
+      if (timeRemaining >= 0 && answersGiven < quizObjectArray.length) {
         timerEl.textContent = 'Time: ' + timeRemaining;
         timeRemaining--;
         // console.log(timeRemaining);
       } 
 
-      else if (timeRemaining >= 0 && answersGiven >= 5) {
+      // if all answers given, stop clock
+      else if (timeRemaining >= 0 && answersGiven >= quizObjectArray.length) {
         clearInterval(timeInterval);
       }
 
-      // otherwise, reset time interval, 
+      
       else {
         clearInterval(timeInterval);
         timerEl.textContent = 'Time: ' + 0;
@@ -80,13 +74,13 @@ function timer() {
   function populateQuizObjects() {
       quizContainer.classList.remove('text-center');
 
-      if (answersGiven === quizObjectArray.length - 1) {
+      if (answersGiven === quizObjectArray.length) {
         allDone();
         return;
       }
 
       populate();
-  };
+  }
 
   function populate() {
     // Replace header text with question 1 for now
@@ -101,7 +95,7 @@ function timer() {
     // console.log(quizObjectArray.result[i]);
   }
   index++; 
-};
+}
 
   function allDone() {
     // Replace header text with question 1 for now
@@ -111,7 +105,7 @@ function timer() {
     `<h4 class="py-1">Your final score is ${finalUserScore}</h4></br>
      <h4 class="py-1">Enter initials: <input type="text" id="initials" class="border align-middle d-inline"> <button type="button" class="d-inline mt-2 btn btn-primary align-baseline" onclick="submitHandler()"'>Submit</button></h4>`;
      timerEl.textContent = timeRemaining + 1;
-  };
+  }
 
   function buttonHandler(arg) {
     console.log(arg);
@@ -147,13 +141,12 @@ function timer() {
     else {
       alert("Please enter your initials");
     }
-  };
+  }
 
   function highScorePage() {
     newScore = `${quizTaker} - ${finalUserScore}`;
     viewHighScores();
-
-  };
+  }
 
   function viewHighScores() {
     quizButtonGroup.innerHTML = '';
@@ -173,15 +166,13 @@ function timer() {
     localStorage.setItem('scores', JSON.stringify(currentScores));
     quizHeader.textContent = "High scores";
 
-    for (let i = 0; i < currentScores.length; i++) {
+    for (var i = 0; i < currentScores.length; i++) {
       quizButtonGroup.innerHTML += `<p class="alert alert-secondary userScore" role="alert">${currentScores[i]}</p>`;
     }
     
     quizButtonGroup.innerHTML +=
     `<button type="button" class="d-inline mt-2 btn btn-primary" onclick="goBack()">Go back</button>
     <button type="button" class="d-inline mt-2 btn btn-primary" onclick="clearStorage()">Clear High Scores</button>`;
-
-    // return currentScores;
   }
 
   function goBack() {
@@ -189,46 +180,20 @@ function timer() {
   }
 
   function clearStorage() {
-    alert("High scores deleted.")
+    alert("High scores deleted.");
     localStorage.clear();
     location.reload();
   }
 
   // Run the timer function, this needs to be hooked to the "Start Quiz" button.
   document.getElementById('startButton').addEventListener("click", function(e){
-    console.log("start button:", e.target)
+    console.log("start button:", e.target);
     timer();
     populateQuizObjects();
   });
 
   // Setup what happens when time runs out.
   function timeExpired() {
-    alert('Time Expired.');
+    alert('Time Expired. Please try again.');
     location.reload();
   }
- 
-
-// SECOND TO-DO: I'll try setting up the quiz questions and related elements as objects, make them flexible so they could be used for everything after the "menu". 
-// Arrays within the objects for questions and answers? 
-// Loop through & populate answer buttons with their text and true / false logic.  
-
-
-// AS A coding boot camp student
-// I WANT to take a timed quiz on JavaScript fundamentals that stores high scores
-// SO THAT I can gauge my progress compared to my peers
-
-// GIVEN I am taking a code quiz
-// WHEN I click the start button
-// THEN a timer starts and I am presented with a question
-
-// WHEN I answer a question
-// THEN I am presented with another question
-
-// WHEN I answer a question incorrectly
-// THEN time is subtracted from the clock
-
-// WHEN all questions are answered or the timer reaches 0
-// THEN the game is over
-
-// WHEN the game is over
-// THEN I can save my initials and score
