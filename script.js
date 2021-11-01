@@ -126,7 +126,7 @@ function timer() {
       
       setTimeout(function(){
         populateQuizObjects(); 
-      }, 275);
+      }, 500);
 
       return(answersGiven);
   }
