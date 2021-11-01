@@ -1,6 +1,8 @@
 # Code Quiz
 A timed code quiz with a set of technical interview questions.
 
+https://samvauclain.github.io/code-quiz/
+
 AS A coding boot camp student
 I WANT to take a timed quiz on JavaScript fundamentals that stores high scores
 SO THAT I can gauge my progress compared to my peers
