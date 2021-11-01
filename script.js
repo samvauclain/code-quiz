@@ -53,15 +53,14 @@ function timer() {
       if (timeRemaining >= 0 && answersGiven < quizObjectArray.length) {
         timerEl.textContent = 'Time: ' + timeRemaining;
         timeRemaining--;
-        // console.log(timeRemaining);
       } 
 
-      // if all answers given, stop clock
+      // if all answers given, stop clock 
       else if (timeRemaining >= 0 && answersGiven >= quizObjectArray.length) {
         clearInterval(timeInterval);
       }
-
       
+      // time expired, restart
       else {
         clearInterval(timeInterval);
         timerEl.textContent = 'Time: ' + 0;
@@ -75,7 +74,7 @@ function timer() {
       quizContainer.classList.remove('text-center');
 
       if (answersGiven === quizObjectArray.length) {
-        allDone();
+        quizDone();
         return;
       }
 
@@ -83,7 +82,7 @@ function timer() {
   }
 
   function populate() {
-    // Replace header text with question 1 for now
+    // Replace header text with question 
     quizHeader.textContent = quizObjectArray[index].question;
     quizButtonGroup.innerHTML = '';
     //remove start button and quiz paragraph for "clean slate"
@@ -97,7 +96,7 @@ function timer() {
   index++; 
 }
 
-  function allDone() {
+  function quizDone() {
     // Replace header text with question 1 for now
     finalUserScore = userScore + timeRemaining + 1;
     quizHeader.textContent = "All done!";
